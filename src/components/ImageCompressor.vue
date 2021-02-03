@@ -192,17 +192,17 @@ export default {
           let blob = base64toblob(processedImg.split(",")[1], "image/jpeg");
           if (blob.size > this.sizeTo * 1024) {
             if (this.maxSize < 0.1 && this.quality < 0.02) {
-              console.log("snap", this.maxSize, this.quality);
+              this.log("snap", this.maxSize, this.quality);
               return;
             }
             this.maxSize -= 0.1;
             this.quality -= 0.01;
             this.handleFile(file);
-            console.log("compressing", this.maxSize, this.quality, blob);
+            this.log("compressing", this.maxSize, this.quality, blob);
           } else {
-            console.log(blob);
+            this.log(blob);
             this.$emit("doneCompression", this.formatOutput(processedImg));
-            console.log("compressed Done!!!");
+            this.log("compressed Done!!!");
           }
         }
       });
@@ -337,7 +337,7 @@ export default {
 
       if (mWidth <= 0) {
         mWidth = 1;
-        console.log("ImageUploader: image size is too small");
+        this.log("ImageUploader: image size is too small");
       }
 
       // simple resize with a 2:1 ratio
@@ -523,10 +523,10 @@ export default {
 
       if (this.outputFormat === "blob") {
         if (typeof base64toblob === "undefined") {
-          console.log(
+          this.log(
             'Missing library! base64toblob must be loaded to output as "blob"'
           );
-          console.log("Falling back to default base64 dataUrl");
+          this.log("Falling back to default base64 dataUrl");
           return imageData;
         }
         const blob = base64toblob(imageData.split(",")[1], "image/jpeg");
