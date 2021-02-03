@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "base64toblob": "^0.0.2",
+    "blueimp-canvas-to-blob": "^3.28.0",
     "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "vue-advanced-cropper": "^1.2.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
