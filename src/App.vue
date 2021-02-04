@@ -19,6 +19,7 @@
       :capture="false"
       :debug="1"
       doNotResize="gif"
+      :maxWidth="croppedWidth"
       :autoRotate="false"
       outputFormat="blob"
       @doneCompression="setImage"
@@ -44,6 +45,7 @@ export default {
   data() {
     return {
       image: null,
+      croppedWidth: null,
     };
   },
   methods: {
@@ -73,6 +75,7 @@ export default {
     },
     uploadImage() {
       const { canvas } = this.$refs.cropper.getResult();
+      this.croppedWidth = canvas.width;
       if (canvas) {
         const form = new FormData();
         canvas.toBlob((blob) => {
