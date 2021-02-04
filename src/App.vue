@@ -13,6 +13,7 @@
       </span>
     </div>
     <image-compressor
+      ref="compressor"
       :preview="true"
       :sizeTo="200"
       :capture="false"
@@ -77,7 +78,17 @@ export default {
         canvas.toBlob((blob) => {
           form.append("file", blob);
           console.log(blob);
-          document.querySelector("#image").src = URL.createObjectURL(blob);
+          this.$refs.compressor.handleFile(blob);
+          this.$on("onComplete", (data) => {
+            console.log(data, "ccc");
+          });
+          // const reader = new FileReader();
+          // reader.readAsDataURL(blob);
+          // reader.onloadend = function() {
+          //   var base64data = reader.result;
+          //   console.log(base64data);
+          //   document.querySelector("#image").src = base64data;
+          // };
           // You can use axios, superagent and other libraries instead here
           // fetch("http://example.com/upload/", {
           //   method: "POST",

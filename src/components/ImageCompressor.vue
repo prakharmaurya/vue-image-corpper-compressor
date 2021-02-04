@@ -43,7 +43,7 @@ export default {
      */
     maxWidth: {
       type: Number,
-      default: 1024,
+      default: 1300,
     },
 
     /**
@@ -53,7 +53,7 @@ export default {
      */
     maxHeight: {
       type: Number,
-      default: 1024,
+      default: 1300,
     },
 
     /**
@@ -180,33 +180,6 @@ export default {
   },
 
   methods: {
-    reduceSizeTo(file) {
-      this.handleFile(file);
-      this.$on("onComplete", (processedImg) => {
-        if (processedImg) {
-          // Multi photo preview
-          // var image = new Image();
-          // image.src = processedImg.dataUrl;
-          // document.body.appendChild(image);
-
-          let blob = base64toblob(processedImg.split(",")[1], "image/jpeg");
-          if (blob.size > this.sizeTo * 1024) {
-            if (this.maxSize < 0.1 && this.quality < 0.02) {
-              this.log("snap", this.maxSize, this.quality);
-              return;
-            }
-            this.maxSize -= 0.1;
-            this.quality -= 0.01;
-            this.handleFile(file);
-            this.log("compressing", this.maxSize, this.quality, blob);
-          } else {
-            this.log(blob);
-            this.$emit("doneCompression", this.formatOutput(processedImg));
-            this.log("compressed Done!!!");
-          }
-        }
-      });
-    },
     /**
      * Get file from input
      * @param  {object} event
@@ -216,7 +189,32 @@ export default {
         e.target.files && e.target.files.length ? e.target.files[0] : null;
       if (file) {
         this.emitLoad();
-        this.reduceSizeTo(file);
+        this.handleFile(file);
+      }
+    },
+
+    recursiveSizeReducer(processedImg) {
+      if (processedImg) {
+        // Multi photo preview
+        // var image = new Image();
+        // image.src = processedImg.dataUrl;
+        // document.body.appendChild(image);
+
+        let blob = base64toblob(processedImg.split(",")[1], "image/jpeg");
+        if (blob.size > this.sizeTo * 1024) {
+          if (this.maxSize < 0.1 && this.quality < 0.02) {
+            this.log("snap", this.maxSize, this.quality);
+            return;
+          }
+          this.maxSize -= 0.1;
+          this.quality -= 0.03;
+          this.handleFile(blob);
+          this.log("compressing", this.maxSize, this.quality, blob);
+        } else {
+          this.log(blob);
+          this.$emit("doneCompression", this.formatOutput(processedImg));
+          this.log("compressed Done!!!");
+        }
       }
     },
 
@@ -589,6 +587,7 @@ export default {
     if (this.maxSizePhoto) {
       this.maxSize = this.maxSizePhoto;
     }
+    this.$on("onComplete", this.recursiveSizeReducer);
   },
 };
 </script>
